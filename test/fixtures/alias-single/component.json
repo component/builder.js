@@ -1,0 +1,6 @@
+{
+  "name": "alias-single",
+  "description": "multiple scripts component",
+  "version": "0.0.1",
+  "scripts": ["foo.js"]
+}

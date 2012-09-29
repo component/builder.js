@@ -40,6 +40,18 @@ describe('Builder', function(){
     })
   })
 
+  describe('.buildAliases(fn)', function(){
+    it('should build default aliases with correct file name', function(done){
+      var builder = new Builder('test/fixtures/alias');
+      builder.buildAliases(function(err, js){
+        if (err) return done(err);
+        var out = read('test/fixtures/alias-js.js', 'utf8');
+        js.should.equal(out);
+        done();
+      });
+    })
+  })
+
   describe('.buildStyles(fn)', function(){
     it('should build the styles', function(done){
       var builder = new Builder('test/fixtures/hello');

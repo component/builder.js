@@ -1,0 +1,6 @@
+{
+  "name": "alias-multi-index",
+  "description": "multiple scripts component",
+  "version": "0.0.1",
+  "scripts": ["foo.js", "bar.js", "index.js"]
+}
