@@ -1,0 +1,12 @@
+{
+  "name": "alias",
+  "description": "hello world component",
+  "version": "0.0.1",
+  "dependencies": {
+    "alias-multi": "*",
+    "alias-multi-index": "*",
+    "alias-single": "*",
+    "alias-main": "*"
+  },
+  "scripts": ["boot.js"]
+}
