@@ -239,6 +239,42 @@ describe('Builder', function(){
     })
   })
 
+  describe('.separate()', function(){
+    it('should build js and css as separate files', function(done){
+      var builder = new Builder('test/fixtures/hello');
+      builder.addLookup('test/fixtures');
+      builder.separate();
+      builder.build(function(err, res){
+        if (err) return done(err);
+        res.js.should.be.an.instanceof(Array);
+        res.css.should.be.an.instanceof(Array);
+        res.js.length.should.equal(4);
+        res.css.length.should.equal(3);
+        res.js[0].file.should.include('.js');
+        res.js[0].content.should.include('require.register');
+        res.js[3].content.should.include('require.alias');
+        res.css[0].file.should.include('.css');
+        done();
+      })
+    })
+
+    it('should not mess with .files', function(done){
+      var builder = new Builder('test/fixtures/assets-parent');
+      builder.addLookup('test/fixtures');
+      builder.copyAssetsTo('/tmp/build');
+      builder.build(function(err, res){
+        if (err) return done(err);
+        assert(1 == res.files.length);
+        assert('/tmp/build/assets/some.txt' == res.files[0]);
+        var real = realpath('/tmp/build/assets/some.txt');
+        var path = resolve('test/fixtures/assets/some.txt');
+        assert(real == path);
+        assert(exists('/tmp/build/assets/some.txt'));
+        exec('rm -fr /tmp/build', done);
+      });
+    })
+  })
+
   describe('.ignore(name)', function(){
     it('should ignore the given component and its deps', function(done){
       var builder = new Builder('test/fixtures/hello');
