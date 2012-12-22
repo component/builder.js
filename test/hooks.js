@@ -16,9 +16,11 @@ var Builder = require('..')
   , read = fs.readFileSync;
 
 function ejsPlugin(builder) {
-  builder.hook('before scripts', function(pkg){
+  console.log(123)
+
+  builder.defineHook('before scripts', function(pkg, callback){
     var tmpls = pkg.conf.templates;
-    if (!tmpls) return;
+    if (!tmpls) return callback();
     tmpls.forEach(function(file){
       var path = pkg.path(file);
       var str = fs.readFileSync(path, 'utf8');
@@ -27,6 +29,7 @@ function ejsPlugin(builder) {
       var name = file.split('.')[0] + '.js';
       pkg.addFile('scripts', name, js);
     });
+    callback();
   })
 }
 
