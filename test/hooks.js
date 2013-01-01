@@ -16,9 +16,7 @@ var Builder = require('..')
   , read = fs.readFileSync;
 
 function ejsPlugin(builder) {
-  console.log(123)
-
-  builder.defineHook('before scripts', function(pkg, callback){
+  builder.hook('before scripts', function(pkg, callback){
     var tmpls = pkg.conf.templates;
     if (!tmpls) return callback();
     tmpls.forEach(function(file){
