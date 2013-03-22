@@ -1,0 +1,8 @@
+{
+  "name": "local",
+  "dependencies": {},
+  "scripts": [],
+  "cool-extension": [
+    "index.cool-extension"
+  ]
+}
