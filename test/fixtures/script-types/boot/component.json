@@ -1,0 +1,11 @@
+{
+  "name": "boot",
+  "dependencies": {},
+  "local": [
+    "local"
+  ],
+  "cool-extension": [
+    "index.cool-extension"
+  ],
+  "scripts": []
+}

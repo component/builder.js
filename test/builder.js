@@ -4,6 +4,7 @@
  */
 
 var Builder = require('..')
+  , Batch = require('batch')
   , assert = require('better-assert')
   , exec = require('child_process').exec
   , path = require('path')
@@ -334,4 +335,57 @@ describe('Builder', function(){
       done();
     })
   })
+
+  it('should support other script types', function(done){
+    var type = 'cool-extension'
+    , builder = new Builder('test/fixtures/script-types');
+    builder.addLookup('test/fixtures/script-types');
+    builder.addScriptType(type);
+    builder.use(function(builder) {
+      builder.hook('before scripts', function(pkg, fn) {
+        var batch = new Batch()
+        , scripts = pkg.conf[type];
+
+        if (!scripts) {
+          return fn();
+        }
+        
+        if (!pkg.conf.scripts) {
+          batch.push(function(done) {
+
+            pkg.conf.scripts = [];
+            fs.writeFileSync(
+              path.resolve(pkg.dir + '/component.json'),
+              JSON.stringify(pkg.conf, null, 2)
+            );
+
+            return done();
+          });
+        }
+
+        scripts.forEach(function(file) {
+          if (path.extname(file) !== type) return
+          batch.push(function(done) {
+            pkg.addFile('scripts', file.replace('.'+type, '.js'), '');
+            return done();
+          });
+        });
+        return batch.end(fn);
+      });
+    });
+
+    builder.build(function(err, res){
+      if (err) return done(err);
+
+      res.js.should.include('boot/index.js');
+      res.js.should.include('local/index.js');
+
+      res.js.should.include('require.alias("local/index.js", "boot/deps/local/index.js")');
+      res.js.should.include('require.alias("local/index.js", "boot/deps/local/index.js")');
+
+      done();
+    })
+
+  })
+
 })
