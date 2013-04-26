@@ -354,6 +354,7 @@ describe('Builder', function(){
       if (err) return done(err);
       res.js.should.include('require.alias("boot/boot.js", "boot/index.js")');
       res.js.should.include('require.alias("main/foo.js", "boot/deps/main/index.js")');
+      res.js.should.not.include('require.alias("main/index.js", "main/index.js")');
       done();
     })
   })
