@@ -1,5 +1,5 @@
 {
   "name": "templates",
   "version": "0.0.1",
-  "templates": ["index.html"]
+  "templates": ["index.html", "index.json", "index.css", "index.jade"]
 }

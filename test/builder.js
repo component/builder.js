@@ -64,13 +64,13 @@ describe('Builder', function(){
   })
 
   describe('.buildTemplates(fn)', function(){
-    it('should build the templates', function(done){
+    it('should build the html, json and css templates, ignoring all others', function(done){
       var builder = new Builder('test/fixtures/template-strings');
       builder.addLookup('test/fixtures');
       builder.buildTemplates(function(err, str){
         if (err) return done(err);
         var out = read('test/fixtures/template.js', 'utf8');
-        str.trim().should.equal(out);
+        str.trim().should.equal(out.trim());
         done();
       })
     })
