@@ -323,6 +323,19 @@ describe('Builder', function(){
         done();
       })
     })
+    it('should include local dep development dependencies', function(done){
+      var builder = new Builder('test/fixtures/dev-deps-local');
+      builder.addLookup('test/fixtures');
+      builder.addLookup('test/fixtures/dev-deps-local');
+      builder.development();
+      builder.build(function(err, res){
+        if (err) return done(err);
+        res.js.should.include('component-emitter/index.js');
+        res.js.should.include('component-jquery/index.js');
+        res.js.should.include('component-dialog/index.js');
+        done();
+      })
+    })
   })
 
   describe('.addSourceURLs()', function() {
