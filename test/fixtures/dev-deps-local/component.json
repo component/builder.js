@@ -1,0 +1,13 @@
+{
+  "name": "popover",
+  "description": "popover component",
+  "dependencies": {
+    "component/emitter": "*"
+  },
+  "development": {
+    "component/jquery": "*"
+  }
+  ,"local": [
+    "other"
+  ]
+}

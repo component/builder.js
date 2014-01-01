@@ -1,0 +1,10 @@
+{
+    "name": "other",
+    "description":"other component",
+    "development":{
+        "component/dialog":"*"
+    }
+    ,"scripts":[
+        "index.js"
+    ]
+}
