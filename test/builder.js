@@ -116,6 +116,19 @@ describe('Builder', function(){
       })
     })
 
+    it('should build js with config injected', function(done){
+      var builder = new Builder('test/fixtures/hello-no-json', null, require('./fixtures/hello-no-json/no-component.json'));
+      builder.addLookup('test/fixtures');
+      builder.build(function(err, res){
+        if (err) return done(err);
+        var out = read('test/fixtures/hello.js', 'utf8');
+        res.js.trim().should.equal(out.trim());
+        done();
+      })
+    })
+
+
+
     it('should build css', function(done){
       var builder = new Builder('test/fixtures/hello');
       builder.addLookup('test/fixtures');
@@ -126,6 +139,18 @@ describe('Builder', function(){
         done();
       })
     })
+
+    it('should build css with config injected', function(done){
+      var builder = new Builder('test/fixtures/hello', null, require('./fixtures/hello-no-json/no-component.json'));
+      builder.addLookup('test/fixtures');
+      builder.build(function(err, res){
+        if (err) return done(err);
+        var out = read('test/fixtures/hello.css', 'utf8');
+        res.css.should.equal(out);
+        done();
+      })
+    })
+
 
     it('should load the require.js script', function(done){
       var builder = new Builder('test/fixtures/hello');
@@ -180,6 +205,25 @@ describe('Builder', function(){
       });
     })
 
+    it('should symlink .images with config injected', function(done){
+      var builder = new Builder('test/fixtures/assets-no-json', null, require('./fixtures/assets-no-json/no-component.json'));
+      builder.addLookup('test/fixtures');
+      builder.copyAssetsTo('/tmp/build');
+      builder.build(function(err, res){
+        if (err) return done(err);
+        assert(3 == res.images.length);
+        assert('/tmp/build/assets/images/logo.png' == res.images[0]);
+        assert('/tmp/build/assets/images/maru.jpeg' == res.images[1]);
+        assert('/tmp/build/assets/images/npm.png' == res.images[2]);
+        assert(exists('/tmp/build/assets/images/maru.jpeg'));
+        assert(exists('/tmp/build/assets/images/logo.png'));
+        assert(exists('/tmp/build/assets/images/npm.png'));
+        done();
+      });
+    })
+
+
+
     it('should symlink .files', function(done){
       var builder = new Builder('test/fixtures/assets-parent');
       builder.addLookup('test/fixtures');
@@ -217,6 +261,29 @@ describe('Builder', function(){
         });
       });
     })
+
+    it('should copy .images in copyFiles mode when config injected', function(done){
+      var builder = new Builder('test/fixtures/assets', null, require('./fixtures/assets-no-json/no-component.json'));
+      builder.copyFiles();
+      builder.addLookup('test/fixtures');
+      builder.copyAssetsTo('/tmp/build');
+      builder.build(function(err, res){
+        if (err) return done(err);
+        assert(3 == res.images.length);
+        assert('/tmp/build/assets/images/logo.png' == res.images[0]);
+        assert('/tmp/build/assets/images/maru.jpeg' == res.images[1]);
+        assert('/tmp/build/assets/images/npm.png' == res.images[2]);
+        assert(exists('/tmp/build/assets/images/maru.jpeg'));
+        assert(exists('/tmp/build/assets/images/logo.png'));
+        assert(exists('/tmp/build/assets/images/npm.png'));
+        // images aren't symlinks
+        fs.lstat('/tmp/build/assets/images/npm.png', function(err, stats) {
+          assert(stats.isSymbolicLink() == false);
+          done();
+        });
+      });
+    })
+
 
     it('should copy .files in copyFiles mode', function(done){
       var builder = new Builder('test/fixtures/assets-parent');
