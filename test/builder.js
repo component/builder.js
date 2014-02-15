@@ -444,4 +444,12 @@ describe('Builder', function(){
       done();
     })
   })
+
+  it('should catch syntax error', function(done){
+    var builder = new Builder('test/fixtures/syntax-error');
+    builder.build(function(err){
+      err.message.should.include('ParseError: Unexpected identifier')
+      done()
+    })
+  })
 })

@@ -14,7 +14,8 @@
     "debug": "*",
     "better-assert": "~0.1.0",
     "cp": "~0.1.0",
-    "string-to-js": "0.0.1"
+    "string-to-js": "0.0.1",
+    "syntax-error": "~0.1.0"
   },
   "devDependencies": {
     "mocha": "*",
