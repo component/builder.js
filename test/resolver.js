@@ -1,13 +1,18 @@
 
 var Resolver = require('../lib/resolver');
 
+var Batch = require('batch');
+Batch.prototype.concurrency = function () {
+  this.n = 1;
+};
+
 describe('Resolver', function(){
   it('should add implicit ./components dir to resolver paths', function(done){
     var resolver = Resolver('test/fixtures/app');
     resolver.end(function(err, res){
       if (err) return done(err);
       res[1].name.should.eql('foo');
-      res[2].name.should.eql('bar');
+      res[0].name.should.eql('bar');
       done();
     });
   })
@@ -19,8 +24,8 @@ describe('Resolver', function(){
       resolver.development();
       resolver.end(function(err, res){
         if (err) return done(err);
-        res[1].name.should.eql('emitter');
-        res[2].name.should.eql('jquery');
+        res[0].name.should.eql('emitter');
+        res[1].name.should.eql('jquery');
         done();
       })
     })
@@ -33,9 +38,9 @@ describe('Resolver', function(){
       nested.end(function(err, arr){
         if (err) return done(err);
         arr.length.should.eql(3);
-        arr[0].name.should.eql('nested');
+        arr[2].name.should.eql('nested');
         arr[1].name.should.eql('one');
-        arr[2].name.should.eql('two');
+        arr[0].name.should.eql('two');
         done();
       });
     })
@@ -54,7 +59,7 @@ describe('Resolver', function(){
       scripts.add('..');
       scripts.end(function(err, all){
         if (err) return done(err);
-        var hello = all.shift();
+        var hello = all.pop();
         hello.scripts.length.should.eql(2);
         var foo = hello.scripts.shift();
         foo.filename.should.eql('foo.js');
@@ -73,7 +78,7 @@ describe('Resolver', function(){
       templates.end(function(err, all){
         if (err) return done(err);
         all.length.should.eql(1);
-        var tpl = all[0].templates.shift();
+        var tpl = all[0].templates.pop();
         tpl.filename.should.eql('index.html');
         tpl.contents.should.eql('<div></div>');
         done();
@@ -87,7 +92,7 @@ describe('Resolver', function(){
       styles.add('..');
       styles.end(function(err, all){
         if (err) return done(err);
-        var styles = all.shift().styles;
+        var styles = all.pop().styles;
         var foo = styles.shift();
         var bar = styles.shift();
         foo.contents.should.eql('foo {\n  bar: \'baz\';\n}');
